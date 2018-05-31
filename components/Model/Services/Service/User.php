@@ -40,7 +40,8 @@ class User extends \Components\Model\Services\Service
         }
          
         $entity = null;
-        if ($this->auth->isAuthorizedVisitor()) {
+        // if ($this->auth->isAuthorizedVisitor()) { // her ikisi de uygun
+        if (auth()->isAuthorizedVisitor()) {
             $entity = $this->findFirstById($this->auth->getUserId());
         }
         if (!$entity) {

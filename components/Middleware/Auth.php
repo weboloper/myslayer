@@ -12,14 +12,11 @@ class Auth implements \League\Tactician\Middleware
             redirect(
 
                 url(
-                    'users/login'
+                    route('showLoginForm'),
+                    [
+                        'ref' => url()->current(),
+                    ]
                 )
-                // url(
-                //     route('showLoginForm'),
-                //     [
-                //         'ref' => url()->current(),
-                //     ]
-                // )
             );
         }
 

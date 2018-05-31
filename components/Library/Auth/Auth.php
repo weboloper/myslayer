@@ -34,56 +34,11 @@ class Auth extends BaseAuth
     }
 
      
-     /**
-     * Checking user is have permission admin
-     *
-     * @return boolean
-     */
-    public function isAdmin()
-    {
-        if (!$this->isAuthorizedVisitor()) {
-            return false;
-        }
-        return $this->userService->isAdmin();
-    }
-
-    /**
-     * @return bool
-     */
-    public function isModerator()
-    {
-        if (!$this->isAuthorizedVisitor()) {
-            return false;
-        }
-        return $this->userService->isModerator();
-    }
-
-    /**
-     * Check whether the user is authorized.
-     *
-     * @return bool
-     */
     public function isAuthorizedVisitor()
     {
         return $this->check();
     }
-
-     /**
-      * Checking user is have permission admin
-      *
-      * @return boolean
-      */
-    public function isTrustModeration()
-    {
-        return $this->isAdmin() || $this->isModerator();
-    }
-
-
-    /**
-     * Returns the current user id
-     *
-     * @return int|null
-     */
+    
     public function getUserId()
     {
         if (!$this->isAuthorizedVisitor()) {
@@ -93,7 +48,6 @@ class Auth extends BaseAuth
         return (int)$this->user()->id;
  
     }
-
 
 
 }   

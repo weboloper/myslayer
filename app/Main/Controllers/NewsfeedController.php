@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Blog\Controllers;
+namespace App\Main\Controllers;
 
 class NewsfeedController extends Controller
 {
@@ -9,7 +9,6 @@ class NewsfeedController extends Controller
      */
     public function initialize()
     {
-        // $this->middleware('auth');
         $this->middleware('permission');
     }
 

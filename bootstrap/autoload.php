@@ -66,7 +66,6 @@ if (file_exists($base_path.'/.env')) {
 */
 
 if (! function_exists('acl')) {
-
     /**
      * This returns the service provider 'auth'.
      *
@@ -78,16 +77,12 @@ if (! function_exists('acl')) {
     }
 }
 
- 
-
-$kernel = new Components\Kernel\Kernel;
-
+$kernel = new Clarity\Kernel\Kernel;
 $kernel
     ->setPaths(require_once url_trimmer(__DIR__.'/path.php'))
     ->setEnvironment(env('APP_ENV', 'production'))
     ->loadFactory()
     ->loadConfig()
-    ->loadExternalServices()
     ->loadTimeZone();
 
 return $kernel;

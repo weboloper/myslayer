@@ -2,11 +2,6 @@
 
 return [
 
-
-    'application' => [
-        'name' => env('APP_NAME' , 'slayer') 
-    ],
-
     /*
     +----------------------------------------------------------------+
     |\ Application Debugging                                        /|
@@ -253,7 +248,6 @@ return [
 
         Clarity\Providers\Aliaser::class,
         Components\Providers\Application::class,
-        // Clarity\Providers\Auth::class,
         Components\Providers\Auth::class,
         Components\Providers\Acl::class,
         Clarity\Providers\Cache::class,
@@ -282,6 +276,7 @@ return [
         Clarity\View\ViewServiceProvider::class,
 
         # register your providers below.
+        // App\Main\Providers\RouterServiceProvider::class,
         App\Blog\Providers\RouterServiceProvider::class,
         App\Users\Providers\RouterServiceProvider::class
 
@@ -300,8 +295,7 @@ return [
     */
 
     'aliases'  => [
-        // 'Auth'        => Clarity\Facades\Auth::class,
-        'Auth'        => Components\Library\Auth\Auth::class,
+        'Auth'        => Clarity\Facades\Auth::class,
         'Acl'         => Components\Library\Acl\Manager::class,
         'Cache'       => Clarity\Facades\Cache::class,
         'CLI'         => Clarity\Console\CLI::class,
@@ -337,22 +331,9 @@ return [
     */
 
     'middlewares' => [
-        'auth' => Components\Middleware\Auth::class,
-        'csrf' => Components\Middleware\CSRF::class,
-        'acl'  => Components\Middleware\Acl::class,
+        'auth'          => Components\Middleware\Auth::class,
+        'csrf'          => Components\Middleware\CSRF::class,
+        'permission'    => Components\Middleware\Permission::class,
     ],
-
-    /**
-     * Your client ID and client secret keys come from
-     *
-     * @link https://developers.facebook.com/
-     */
-
-    'facebook' => [
-        'clientId'     => env('FACEBOOK_CLIENT_ID'),
-        'clientSecret' => env('FACEBOOK_SECRET'),
-        'redirectUri'  => env('FACEBOOK_REDIRECT_URI')
-    ],
-
 
 ]; # end of return

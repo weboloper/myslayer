@@ -8,6 +8,7 @@
 namespace Components\Providers;
 
 use Components\Library\Auth\Auth as BaseAuth;
+// use Clarity\Support\Auth\Auth as BaseAuth;
 
 /**
  * This provider handles the general authentication.
