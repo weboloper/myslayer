@@ -224,7 +224,12 @@ class UsersController extends Controller
      * @return mixed
      */
     public function showForgetPasswordForm()
-    {
+    {   
+        if(request()->isPost()) {
+            $inputs = request()->get();
+            die(var_dump($inputs));
+        }
+        
         # find session if it has an 'input'
         if (session()->has('input')) {
 

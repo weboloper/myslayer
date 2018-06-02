@@ -9,8 +9,8 @@ class NewsfeedController extends Controller
      */
     public function initialize()
     {
-        // $this->middleware('auth');
-        $this->middleware('permission');
+        $this->middleware('auth');
+        // $this->middleware('permission');
     }
 
     /**

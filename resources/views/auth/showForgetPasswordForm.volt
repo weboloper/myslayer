@@ -50,7 +50,7 @@
         </div>
         <div class="col-md-6">
             <div class="border p-5">
-                <form class="form-vertical" method="POST" action="{{ route('attemptToLogin') }}" autocomplete="off">
+                <form class="form-vertical" method="POST" action="{{ route('showForgetPasswordForm') }}" autocomplete="off">
                     {{ csrf_field() }}
 
                     <input type="hidden" name="ref" value="{{ request().get('ref') }}">
