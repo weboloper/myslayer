@@ -31,8 +31,8 @@ class Terms extends Model
             ['alias' => 'posts']
         );
 
-        $this->belongsTo('id', TermTaxonomy::class, 'term_id', ['alias' => 'taxonomy', 'reusable' => true]);
-        $this->hasMany('id', TermMeta::class, 'term_id', ['alias' => 'meta', 'reusable' => true]);
+        $this->belongsTo('term_id', TermTaxonomy::class, 'term_id', ['alias' => 'taxonomy', 'reusable' => true]);
+        $this->hasMany('term_id', TermMeta::class, 'term_id', ['alias' => 'meta', 'reusable' => true]);
     }
 
 }

@@ -2,7 +2,8 @@
 
 use Clarity\Support\Phinx\Migration\AbstractMigration;
 
-class TermMeta extends AbstractMigration
+
+class PostMeta extends AbstractMigration
 {
     /**
      * Change Method.
@@ -27,13 +28,12 @@ class TermMeta extends AbstractMigration
      */
     public function change()
     {
-        $table = $this->table('term_meta' , ['id' => 'meta_id']);
+        $table = $this->table('post_meta' , ['id' => 'meta_id']);
 
-        $table->addColumn('term_id', 'integer')
+        $table->addColumn('post_id', 'integer')
             ->addColumn('meta_key', 'string')
             ->addColumn('meta_value', 'text', ['limit' => 'LONGTEXT'])
             ->create();
-
    
     }
 }

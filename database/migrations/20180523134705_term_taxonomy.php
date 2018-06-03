@@ -31,9 +31,9 @@ class TermTaxonomy extends AbstractMigration
 
         $table->addColumn('term_id', 'integer')
             ->addColumn('taxonomy', 'string')
-            ->addColumn('description', 'text')
-            ->addColumn('count', 'integer')
-            ->addColumn('parent', 'integer')
+            ->addColumn('description', 'text', ['default' => null ])
+            ->addColumn('count', 'integer', ['default' => 0 ] )
+            ->addColumn('parent', 'integer' , ['default' => 0 ])
             ->create();
 
    

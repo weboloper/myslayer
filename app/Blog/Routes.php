@@ -20,6 +20,11 @@ Route::addGet('/try-sample-forms', [
     'action' => 'trySampleForms',
 ])->setName('trySampleForms');
 
+Route::addGet('/posts', [
+    'controller' => 'Posts',
+    'action' => 'index',
+]);
+
 /*
 +----------------------------------------------------------------+
 |\ Organized Routes using RouteGroup                            /|

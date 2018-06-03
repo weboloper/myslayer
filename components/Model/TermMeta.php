@@ -13,12 +13,12 @@ class TermMeta extends Model
 
     public function getSource()
     {
-        return 'termmeta';
+        return 'term_meta';
     }
 
     public function initialize()
     {
-        $this->belongsTo('term_id', Terms::class, 'id', ['alias' => 'term', 'reusable' => true]);
+        $this->belongsTo('term_id', Terms::class, 'term_id', ['alias' => 'term', 'reusable' => true]);
      }
 
 }

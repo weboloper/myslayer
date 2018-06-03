@@ -5,6 +5,8 @@ use Components\Model\Traits\Timestampable;
 use Components\Model\Traits\SoftDeletable;
 
 use Components\Model\TermRelationships;
+use Components\Model\Terms;
+use Components\Model\PostMeta;
 
 class Posts extends Model
 {
@@ -24,9 +26,11 @@ class Posts extends Model
             'post_id',
             'term_id',
             Terms::class,
-            'id',
+            'term_id',
             ['alias' => 'terms']
         );
+
+        $this->hasMany('id', PostMeta::class, 'meta_id', ['alias' => 'meta', 'reusable' => true]);
     }
 
 }

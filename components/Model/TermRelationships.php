@@ -14,15 +14,18 @@ class TermRelationships extends Model
 
     public function getSource()
     {
-        return 'termrelationships';
+        return 'term_relationships';
     }
+
+    public function initialize()
+	{
+	    $this->belongsTo('post_id', Posts::class, 'id', ['alias' => 'post', 'reusable' => true]);
+	    $this->belongsTo('term_id', Terms::class, 'term_id', ['alias' => 'term', 'reusable' => true]); 
+	    
+	}
+
 }
 
-public function initialize()
-{
-    $this->belongsTo('post_id', Posts::class, 'id', ['alias' => 'post', 'reusable' => true]);
-    $this->belongsTo('term_id', Terms::class, 'id', ['alias' => 'term', 'reusable' => true]);""
-    
-}
+
 
  

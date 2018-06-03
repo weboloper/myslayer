@@ -30,7 +30,7 @@ class Roles extends AbstractMigration
         $table = $this->table('roles');
 
         $table->addColumn('name', 'string')
-            ->addColumn('description', 'string')
+            ->addColumn('description', 'string', ['default' => null ] )
             ->create();
     }
 }

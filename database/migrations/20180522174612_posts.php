@@ -32,7 +32,7 @@ class Posts extends AbstractMigration
         $table->addColumn('title', 'string')
             ->addColumn('slug', 'string')
             ->addColumn('type', 'string')
-            ->addColumn('body', 'text')
+            ->addColumn('body', 'text' , ['limit' => 'LONGTEXT'] )
             ->addColumn('excerpt', 'text' ,  ['null' => true] )
             ->addColumn('user_id', 'integer')
             ->addColumn('status', 'string')

@@ -4,20 +4,21 @@ namespace Components\Model;
 use Components\Model\Traits\Timestampable;
 use Components\Model\Traits\SoftDeletable;
 
-use Components\Model\Terms;
+use Components\Model\Posts;
 
-class TermTaxonomy extends Model
+class PostMeta extends Model
 {
     use Timestampable;
     use SoftDeletable;
 
     public function getSource()
     {
-        return 'term_taxonomy';
+        return 'post_meta';
     }
 
     public function initialize()
     {
-        $this->belongsTo('term_id', Terms::class, 'term_id', ['alias' => 'term', 'reusable' => true]);
+        $this->belongsTo('meta_id', Posts::class, 'id', ['alias' => 'post', 'reusable' => true]);
     }
+
 }
