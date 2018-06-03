@@ -4,6 +4,8 @@ namespace Components\Model;
 
 use Phalcon\Db\RawValue;
 use Phalcon\Mvc\Model as BaseModel;
+use Phalcon\Tools\ZFunction;
+
 
 class Model extends BaseModel
 {
@@ -32,5 +34,44 @@ class Model extends BaseModel
 
             $this->{$field} = new RawValue($defaults[$field]);
         }
+    }
+
+    public static function getBuilder()
+    {
+
+        return di()->get('modelsmanager')->createBuilder();
+    }
+
+    public static function prepareQueriesPosts($join, $where, $limit = 15)
+    {
+        $modelNamespace = __NAMESPACE__ . '\\' ;
+
+        /**
+         *
+         * @var \Phalcon\Mvc\Model\Query\BuilderInterface $itemBuilder
+         */
+        $itemBuilder = self::getBuilder()
+            ->from(['p' => Posts::class])
+            ->orderBy('p.created_at DESC');
+
+
+        if (isset($join) && is_array($join)) {
+            $type = (string) $join['type'];
+            $itemBuilder->$type($modelNamespace . $join['model'], $join['on'], $join['alias']);
+        }
+        if (isset($where)) {
+            $itemBuilder->where($where);
+        }
+
+        $totalBuilder = clone $itemBuilder;
+
+        $itemBuilder
+            ->columns(array('p.*'))
+            ->limit($limit);
+
+        $totalBuilder
+            ->columns('COUNT(*) AS count');
+
+        return array($itemBuilder, $totalBuilder);
     }
 }

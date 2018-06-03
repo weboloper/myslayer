@@ -3,6 +3,7 @@
 namespace App\Blog\Controllers;
 
 use Components\Model\Posts;
+use Components\Model\Model;
 
 class PostsController extends Controller
 {
@@ -12,16 +13,26 @@ class PostsController extends Controller
      * @return mixed
      */
     public function index()
-    {
-       $post = Posts::findFirst(1);
+    { 
+      list($itemBuilder, $totalBuilder) =
+                Model::prepareQueriesPosts( false , false, 5);
 
-       $tags = $post->getTerms();
+      $totalPosts = $totalBuilder->getQuery()->setUniqueRow(true)->execute();
+
+      $posts = $itemBuilder->getQuery()->execute();
+
+      return view('posts.index')
+              ->with('posts', $posts);;
+
+       // $post = Posts::findFirst(1);
+
+       // $tags = $post->getTerms();
 
 
-       foreach($tags as  $tag){
-            $meta = $tag->getTaxonomy()->toArray();
-            die(var_dump($meta));
-       }
+       // foreach($tags as  $tag){
+       //      $meta = $tag->getTaxonomy()->toArray();
+        
+       // }
     }
 
      

@@ -6,21 +6,31 @@ use Exception;
 use Components\Model\Users;
 use Components\Validation\LoginValidator;
 use Components\Validation\RegistrationValidator;
+use Components\Validation\ForgetpassValidator;
 use Phalcon\Mvc\Model\Transaction\Failed as TransactionFailed;
 use Components\Library\Facebook\Auth as FacebookAuth;
 
 class UsersController extends Controller
-{
+{   
+    protected $userService;
     /**
      * {@inheritdoc}
      */
-    public function initialize()
+    public function initialize( )
     {
         $this->middleware('csrf', [
             'only' => [
                 'attemptToLogin',
             ],
         ]);
+
+         $this->userService = new \Components\Model\Services\Service\User;
+    }
+
+    
+    public function inject(Components\Model\Services\Service\User $userService)
+    {
+        $this->userService = $userService;
     }
 
     /**
@@ -29,7 +39,12 @@ class UsersController extends Controller
      * @return mixed
      */
     public function showRegistrationForm()
-    {
+    {   
+        if(auth()->check())
+        {   
+            // auth()->destroy();
+            return redirect()->to(url()->to('/'));
+        }
         # find session if it has an 'input'
         if (session()->has('input')) {
 
@@ -50,7 +65,13 @@ class UsersController extends Controller
      * @return mixed
      */
     public function storeRegistrationForm()
-    {
+    {   
+        if(auth()->check())
+        {   
+            auth()->destroy();
+            return redirect()->to(url()->to('/'));
+        }
+
         $inputs = request()->get();
 
         $validator = new RegistrationValidator;
@@ -118,6 +139,11 @@ class UsersController extends Controller
      */
     public function showLoginForm()
     {
+        if(auth()->check())
+        {   
+            // auth()->destroy();
+            return redirect()->to(url()->to('/'));
+        }
         return view('auth.showLoginForm');
     }
 
@@ -127,7 +153,13 @@ class UsersController extends Controller
      * @return mixed
      */
     public function attemptToLogin()
-    {
+    {   
+        if(auth()->check())
+        {   
+            auth()->destroy();
+            return redirect()->to(url()->to('/'));
+        }
+
         $inputs = request()->get();
 
         $validator = new LoginValidator;
@@ -211,11 +243,7 @@ class UsersController extends Controller
     }
 
 
-
-
-
-
-
+ 
 
 
     /**
@@ -225,9 +253,30 @@ class UsersController extends Controller
      */
     public function showForgetPasswordForm()
     {   
+        // if(auth()->check())
+        // {   
+        //     // auth()->destroy();
+        //     return redirect()->to(url()->to('/'));
+        // }
+
         if(request()->isPost()) {
             $inputs = request()->get();
-            die(var_dump($inputs));
+
+            $inputs = request()->get();
+
+            $validator = new ForgetpassValidator;
+            $validation = $validator->validate($inputs);
+
+            if (count($validation)) {
+                session()->set('input', $inputs);
+
+                return redirect()->to(url()->previous())
+                    ->withError(ForgetpassValidator::toHtml($validation));
+            }
+
+            $user = $this->userService->getFirstByEmail( $inputs['email']);
+            $params = $this->userService->resetPassword($user);
+
         }
         
         # find session if it has an 'input'
@@ -251,7 +300,12 @@ class UsersController extends Controller
      * @return mixed
      */
     public function showResetPasswordForm()
-    {
+    {   
+        if(auth()->check())
+        {   
+            // auth()->destroy();
+            return redirect()->to(url()->to('/'));
+        }
         # find session if it has an 'input'
         if (session()->has('input')) {
 
@@ -272,7 +326,6 @@ class UsersController extends Controller
      */
     public function loginFacebook()
     {   
-
 
         // $this->middleware('auth');
         $this->view->disable();

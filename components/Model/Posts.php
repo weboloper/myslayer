@@ -33,4 +33,24 @@ class Posts extends Model
         $this->hasMany('id', PostMeta::class, 'meta_id', ['alias' => 'meta', 'reusable' => true]);
     }
 
+    public function meta($meta_key)
+    {
+        $value =  $this->getMeta(
+            [
+                "meta_key = :meta_key:",
+                "bind" => [
+                    "meta_key" => $meta_key
+                ]
+            ]
+        )->getFirst();
+
+        if($value)
+        {
+            return $value->meta_value;
+        }
+        
+        return null;
+        
+    }
+
 }

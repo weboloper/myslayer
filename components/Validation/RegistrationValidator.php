@@ -3,7 +3,7 @@
 namespace Components\Validation;
 
 use Phalcon\Version;
-use Components\Model\User;
+use Components\Model\Users;
 use Phalcon\Validation\Validator\Email;
 use Phalcon\Validation\Validator\PresenceOf;
 use Phalcon\Validation\Validator\Uniqueness;
@@ -22,7 +22,7 @@ class RegistrationValidator extends Validation
         ]));
 
         $this->add('email', new Uniqueness([
-            'model' => (int) Version::getId() <= 2001341 ? User::class : new User,
+            'model' => (int) Version::getId() <= 2001341 ? Users::class : new Users,
             'message' => 'Email already exist',
         ]));
 

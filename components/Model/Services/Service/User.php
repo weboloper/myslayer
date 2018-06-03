@@ -6,6 +6,10 @@ use DateTime;
 use DateTimeZone;
 use Components\Model\Users;
 
+use Components\Exceptions\EntityNotFoundException;
+use Components\Exceptions\EntityException;
+
+
 class User extends \Components\Model\Services\Service
 {
 	
@@ -111,9 +115,84 @@ class User extends \Components\Model\Services\Service
     public function getFirstById($id)
     {
         if (!$user = $this->findFirstById($id)) {
-            throw new Exceptions\EntityNotFoundException($id);
+            throw new EntityNotFoundException($id);
         }
         return $user;
+    }
+
+    /**
+     * Finds User by ID.
+     *
+     * @param  int $id The User ID.
+     * @return Users|null
+     */
+    public function findFirstByEmail($email)
+    { 
+        $user = Users::query()
+            ->where('email = :email:', ['email' => $email])
+            ->limit(1)
+            ->execute();
+        return $user->valid() ? $user->getFirst() : null; 
+    }  
+
+    public function getFirstByEmail($email)
+    {
+        if (!$user = $this->findFirstByEmail($email)) {
+            throw new EntityNotFoundException($email);
+        }
+        return $user;
+    }
+
+
+    public function validateResetPasswordInterval(Users $entity)
+    {
+        $timezone = config()->app->timezone;
+        $passwdResetInterval = abs( 10 );
+
+        $lastResetDate = $entity->lastPasswdReset;
+        if (!empty($lastResetDate) && $passwdResetInterval) {
+            $nextDateForReset = new DateTime(
+                date('Y-m-d H:i:s', $lastResetDate + $passwdResetInterval),
+                new DateTimeZone($timezone)
+            );
+            $now = new DateTime('now', new DateTimeZone($timezone));
+            if ($nextDateForReset > $now) {
+                $nextReset = $nextDateForReset->format('Y-m-d H:i:s') . ' ' . $timezone;
+                throw new Exceptions\EntityException(
+                    $entity,
+                    t("Oh no! You can't reset the password so often. Please try after: %time%", ['time' => $nextReset])
+                );
+            }
+        }
+    }
+
+
+    public function resetPassword(Users $entity)
+    {   
+        $token = bin2hex(random_bytes(100));
+
+        $this->validateResetPasswordInterval($entity);
+        $newAttributes = [
+            'token' => $token,
+            'lastPasswdReset'  => time(),
+        ];
+        $entity->assign($newAttributes);
+        if (!$entity->save()) {
+            throw new EntityException(
+                $entity,
+                t('We were unable to reset your password. Please try again later.')
+            );
+        }
+        $endpoint = $this->url->get(
+            ['for' => 'resetpassword'],
+            ['forgothash' => $newAttributes['passwdForgotHash']],
+            null,
+            env('APP_URL') . '/'
+        );
+        return [
+            'firstname' => $entity->name,
+            'link'      => $endpoint
+        ];
     }
 
 

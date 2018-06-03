@@ -24,6 +24,8 @@ class User extends AbstractMigration
             # created_at and updated_at
             ->addTimestamps()
 
+            ->addColumn('lastPasswdReset', 'integer', ['null' => true, "limit" => 11 ])
+
             # deleted_at
             ->addSoftDeletes()
 

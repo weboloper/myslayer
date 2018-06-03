@@ -275,6 +275,9 @@ return [
         Clarity\Providers\URL::class,
         Clarity\View\ViewServiceProvider::class,
 
+        Components\Providers\ModelsManager::class,
+        Components\Providers\View::class,
+
         # register your providers below.
         // App\Main\Providers\RouterServiceProvider::class,
         App\Blog\Providers\RouterServiceProvider::class,
