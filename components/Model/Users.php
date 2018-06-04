@@ -101,6 +101,19 @@ class Users extends Model
     }
 
     /**
+     * Set the column activated in the table as boolean.
+     *
+     * @param bool $bool a boolean value to be based if activated or not
+     * @return mixed
+     */
+    public function setForgetpass($bool)
+    {
+        $this->forgetpass = (int) $bool;
+
+        return $this;
+    }
+
+    /**
      * To know if the account is activated.
      *
      * @return bool

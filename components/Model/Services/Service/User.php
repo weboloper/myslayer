@@ -145,9 +145,10 @@ class User extends \Components\Model\Services\Service
 
 
     public function validateResetPasswordInterval(Users $entity)
-    {
+    {   
+
         $timezone = config()->app->timezone;
-        $passwdResetInterval = abs( 10 );
+        $passwdResetInterval = abs( 111 );
 
         $lastResetDate = $entity->lastPasswdReset;
         if (!empty($lastResetDate) && $passwdResetInterval) {
@@ -158,41 +159,49 @@ class User extends \Components\Model\Services\Service
             $now = new DateTime('now', new DateTimeZone($timezone));
             if ($nextDateForReset > $now) {
                 $nextReset = $nextDateForReset->format('Y-m-d H:i:s') . ' ' . $timezone;
-                throw new Exceptions\EntityException(
+                throw new EntityException(
                     $entity,
-                    t("Oh no! You can't reset the password so often. Please try after: %time%", ['time' => $nextReset])
+                    $nextReset 
                 );
             }
         }
     }
 
 
-    public function resetPassword(Users $entity)
+    public function resetPassword(Users $entity, $token )
     {   
-        $token = bin2hex(random_bytes(100));
-
+        
         $this->validateResetPasswordInterval($entity);
         $newAttributes = [
             'token' => $token,
+            'forgetpass' => true, 
             'lastPasswdReset'  => time(),
         ];
         $entity->assign($newAttributes);
         if (!$entity->save()) {
             throw new EntityException(
                 $entity,
-                t('We were unable to reset your password. Please try again later.')
+                'We were unable to reset your password. Please try again later.'
             );
         }
-        $endpoint = $this->url->get(
-            ['for' => 'resetpassword'],
-            ['forgothash' => $newAttributes['passwdForgotHash']],
-            null,
-            env('APP_URL') . '/'
-        );
-        return [
-            'firstname' => $entity->name,
-            'link'      => $endpoint
+ 
+    }
+
+    public function assignNewPassword(Users $entity, $password)
+    {   
+        $token = bin2hex(random_bytes(100));
+
+        $newAttributes = [
+            'forgetpass' => false, 
+            'password'  => security()->hash( $password ),
         ];
+        $entity->assign($newAttributes);
+        if (!$entity->save()) {
+            throw new EntityException(
+                $entity,
+                'We were unable to change your password. Please try again later.'
+            );
+        }
     }
 
 

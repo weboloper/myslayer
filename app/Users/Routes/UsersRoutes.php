@@ -41,7 +41,7 @@ class UsersRoutes extends RouteGroup
             'action' => 'showForgetPasswordForm',
         ])->setName('showForgetPasswordForm');
 
-        $this->add('/reset-password', [
+        $this->add('/reset-password/{token}', [
             'action' => 'showResetPasswordForm',
         ])->setName('showResetPasswordForm');
 

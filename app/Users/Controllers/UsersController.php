@@ -7,8 +7,12 @@ use Components\Model\Users;
 use Components\Validation\LoginValidator;
 use Components\Validation\RegistrationValidator;
 use Components\Validation\ForgetpassValidator;
+use Components\Validation\ResetpassValidator;
 use Phalcon\Mvc\Model\Transaction\Failed as TransactionFailed;
 use Components\Library\Facebook\Auth as FacebookAuth;
+
+use Components\Exceptions\EntityNotFoundException;
+use Components\Exceptions\EntityException;
 
 class UsersController extends Controller
 {   
@@ -260,8 +264,7 @@ class UsersController extends Controller
         // }
 
         if(request()->isPost()) {
-            $inputs = request()->get();
-
+            
             $inputs = request()->get();
 
             $validator = new ForgetpassValidator;
@@ -274,8 +277,36 @@ class UsersController extends Controller
                     ->withError(ForgetpassValidator::toHtml($validation));
             }
 
-            $user = $this->userService->getFirstByEmail( $inputs['email']);
-            $params = $this->userService->resetPassword($user);
+            try {
+                $token = bin2hex(random_bytes(100));
+
+                $user = $this->userService->getFirstByEmail( $inputs['email']);
+                $params = $this->userService->resetPassword($user, $token);
+
+                queue(
+                    // 'Components\Queue\Email@registeredSender',
+                    \Components\Queue\Email::class,
+                    [
+                        'function' => 'registeredSender',
+                        'template' => 'emails.forgetpass',
+                        'to' => $inputs['email'],
+                        'url' => route('showResetPasswordForm', ['token' => $token]),
+                        'subject' => 'You tried to reset your password.',
+                    ]
+                );
+                 
+            } catch (EntityException $e) {
+                 return redirect()->to(url()->previous())
+                ->withError(lang()->get('responses/forgetpass.wait_more', ['time' => $e->getMessage() ]));
+
+                 
+            } catch (EntityNotFoundException $e) {
+                return redirect()->to(url()->previous())
+                ->withError(lang()->get('responses/forgetpass.no_email'));
+            }
+
+            return redirect()->to(route('showLoginForm'))
+            ->withSuccess(lang()->get('responses/forgetpass.creation_success'));
 
         }
         
@@ -299,13 +330,59 @@ class UsersController extends Controller
      *
      * @return mixed
      */
-    public function showResetPasswordForm()
+    public function showResetPasswordForm($token)
     {   
         if(auth()->check())
         {   
             // auth()->destroy();
             return redirect()->to(url()->to('/'));
         }
+
+        $user = Users::find([
+            'token = :token: AND forgetpass = :forgetpass:',
+            'bind' => [
+                'token' => $token,
+                'forgetpass' => true,
+            ],
+        ])->getFirst();
+
+        if (! $user) {
+            flash()->session()->warning(
+                'We cant find your request, please '.
+                'try again, or contact us.'
+            );
+
+            return view('errors.404');
+        }
+
+        if(request()->isPost()) {
+            
+            $inputs = request()->get();
+
+            $validator = new ResetpassValidator;
+            $validation = $validator->validate($inputs);
+
+            if (count($validation)) {
+                session()->set('input', $inputs);
+
+                return redirect()->to(url()->previous())
+                    ->withError(ResetpassValidator::toHtml($validation));
+            }
+
+            try {
+                $this->userService->assignNewPassword($user, $inputs['password']);
+                return redirect()->to(route('showLoginForm'))
+                ->withSuccess(lang()->get('responses/forgetpass.reset_success'));
+
+                 
+            } catch (EntityException $e) {
+                 return redirect()->to(url()->previous())
+                ->withError(lang()->get('responses/forgetpass.unknown_error'));
+            }  
+
+        }
+ 
+ 
         # find session if it has an 'input'
         if (session()->has('input')) {
 

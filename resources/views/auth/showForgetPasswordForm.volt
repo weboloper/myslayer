@@ -5,10 +5,9 @@
 {% block header %}
 {% endblock %}
 
-{% block content %}
+{% block content %}   
     <div class="row mt-5">
-        <div class="col-md-10">
-            {# Info Message #}
+        <div class="col-md-10 offset-md-1">
             {% if flash().session().has('info')  %}
                 <div class="alert alert-info">
                     {{ flash().session().output() }}
@@ -29,9 +28,6 @@
                 </div>
             {% endif %}
         </div>
-    </div>
-
-    <div class="row">
         <div class="col-md-4 offset-md-1">
             <div class="border p-5">
                 <h4>Forget Password Form</h4>

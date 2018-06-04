@@ -37,7 +37,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => env('TIMEZONE', 'Europe/Istanbul'),
 
     /*
     +----------------------------------------------------------------+
