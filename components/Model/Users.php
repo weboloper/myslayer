@@ -88,6 +88,28 @@ class Users extends Model
     }
 
     /**
+     * Get the user's email.
+     *
+     * @return string
+     */
+    public function getPassword()
+    {
+        return $this->password;
+    }
+    /**
+     * Get the user's email.
+     *
+     * @return string
+     */
+    public function setPassword($password)
+    {
+        $this->password = $password;
+
+        return $this;
+    }
+
+
+    /**
      * Set the column activated in the table as boolean.
      *
      * @param bool $bool a boolean value to be based if activated or not
