@@ -30,13 +30,14 @@ class Audit extends AbstractMigration
         $table = $this->table('audit');
 
         $table->addColumn('user_id', 'integer')
-            ->addColumn('ipaddress', 'integer', ['limit' => 10 ])
+            ->addColumn('model_name', 'string')
+            ->addColumn('ipaddress', 'integer', ['limit' => 15 ])
             ->addColumn('type', 'char', ['limit' => 1 ])
             ->addColumn('created_at', 'timestamp', array(
                 'default' => 'CURRENT_TIMESTAMP',
                 'update' => ''
             ))
-            ->addColumn('model_name', 'string')
             ->create();
     }
+
 }

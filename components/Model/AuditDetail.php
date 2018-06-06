@@ -30,9 +30,9 @@ class AuditDetail extends Model
         return $this->id;
     }
 
-    public function setAuditId($id)
+    public function setAuditId($audit_id)
     {
-        $this->id = $audit_id;
+        $this->audit_id = $audit_id;
         return $this;
     }
 

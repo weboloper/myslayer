@@ -114,15 +114,30 @@ class Blameable extends Behavior implements BehaviorInterface
      * @return AuditInterface
      */
     public function createAudit($type, ModelInterface $model)
-    {
+    {   
+        
+
         $auditClass = $this->auditClass;
         /** @var AuditInterface $audit */
         $audit = new $auditClass();
         $audit->setUserId(auth()->getUserId());
-        $audit->setModelName( $model );
+        $audit->setModelName( get_class($model));
         $audit->setIpaddress(ip2long(request()->getClientAddress()));
         $audit->setType($type);
         $audit->setCreatedAt(date('Y-m-d H:i:s'));
+
+        // silinmesi lazım
+        if ($audit->save() === false) {
+
+              echo "Umh, We can't store robots right now: \n";
+
+              $messages = $audit->getMessages();
+
+              foreach ($messages as $message) {
+                  echo $message, "\n";
+              }
+          }
+
         
         return $audit;
     }
