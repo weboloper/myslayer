@@ -22,6 +22,8 @@
                 <a href="/users/login" class="btn btn-primary">Login</a>
 
                 <p><a href="https://phalconslayer.readme.io/">Docs</a></p>
+                <h5>Todo</h5>
+                <p>activities</p>
               </div>
             </div>
          </div>

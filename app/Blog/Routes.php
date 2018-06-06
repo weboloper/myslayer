@@ -25,6 +25,11 @@ Route::addGet('/posts', [
     'action' => 'index',
 ]);
 
+Route::addGet('/posts/create', [
+    'controller' => 'Posts',
+    'action' => 'create',
+]);
+
 /*
 +----------------------------------------------------------------+
 |\ Organized Routes using RouteGroup                            /|

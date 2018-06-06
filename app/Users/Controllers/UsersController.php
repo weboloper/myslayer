@@ -21,7 +21,7 @@ class UsersController extends Controller
     /**
      * {@inheritdoc}
      */
-    public function initialize( )
+    public function initialize()
     {
         $this->middleware('csrf', [
             'only' => [
@@ -35,12 +35,15 @@ class UsersController extends Controller
         ]);
 
         $this->userService = new \Components\Model\Services\Service\User;
+        $this->failedLoginService = new \Components\Model\Services\Service\FailedLogin;
     }
 
     
-    public function inject(Components\Model\Services\Service\User $userService)
+    public function inject(Components\Model\Services\Service\User $userService, 
+        Components\Model\Services\Service\FailedLogin $failedLoginService)
     {
         $this->userService = $userService;
+        $this->failedLoginService = $failedLoginService;
     }
 
     /**
@@ -148,7 +151,8 @@ class UsersController extends Controller
      * @return mixed
      */
     public function showLoginForm()
-    {
+    {      
+
         if(auth()->check())
         {   
             // auth()->destroy();
@@ -194,6 +198,20 @@ class UsersController extends Controller
             }
 
             return redirect()->to(url()->to('newsfeed'));
+        }
+
+        $user = $this->userService->getFirstByEmail($credentials['email']);
+
+        $userData = [
+            'user_id'   =>  $user->getId(),
+            'userAgent' =>  request()->getUserAgent(),
+            'ipaddress' =>  request()->getClientAddress(true)  
+        ];
+
+       try {
+            $this->failedLoginService->create($userData );;
+        } catch (EntityException $e) {
+
         }
 
         return redirect()->to(url()->previous())

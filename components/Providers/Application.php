@@ -6,6 +6,8 @@ use Phalcon\Events\Manager as EventsManager;
 use Components\Events\ApplicationEventListener;
 use Clarity\Providers\Application as BaseApplication;
 
+use Components\Events\UserLogins; 
+
 class Application extends BaseApplication
 {
     public function boot()
@@ -15,7 +17,7 @@ class Application extends BaseApplication
         $event_manager = new EventsManager;
 
         $event_manager->attach('application', new ApplicationEventListener);
-
+ 
         $app->setEventsManager($event_manager);
     }
 }

@@ -204,5 +204,4 @@ class User extends \Components\Model\Services\Service
         }
     }
 
-
 }
