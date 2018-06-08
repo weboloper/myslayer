@@ -4,25 +4,9 @@ namespace App\Blog\Controllers;
 
 use Components\Model\Posts;
 use Components\Model\Model;
-use Phalcon\Mvc\Model\Transaction\Manager as TransactionManager;
+
 class PostsController extends Controller
-{   
-    public function saveAction()
-    {   
-      
-      $post = Posts::findFirst(1);
-
-      $post->setTitle(rand(11111, 999999));
-
-     
-      // The model failed to save, so rollback the transaction
-      if ($post->save() === false) {
-           // db()->rollback();
-          return;
-      }
-     
-    }
-
+{
     /**
      * View the starting index of this resource
      *
@@ -31,8 +15,11 @@ class PostsController extends Controller
     public function index()
     { 
 
-      
-      $this->saveAction();
+      $post = Posts::findFirst(1);
+
+      $post->setTitle( rand(5, 15) );
+
+      $post->save();
 
       // list($itemBuilder, $totalBuilder) =
                 // Model::prepareQueriesPosts( false , false, 5);

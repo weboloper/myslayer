@@ -8,9 +8,7 @@ use Components\Model\TermRelationships;
 use Components\Model\Terms;
 use Components\Model\PostMeta;
 
-// use Phalcon\Mvc\Model\Behavior\Blameable;
-use Components\Model\Behavior\Blameable;
-
+use Components\Model\Behavior\Blameable as ModelBlameable;
 
 class Posts extends Model
 {
@@ -24,11 +22,8 @@ class Posts extends Model
 
     public function initialize()
     {   
+        $this->addBehavior(new ModelBlameable());
         $this->keepSnapshots(true);
-
-        $this->addBehavior( new Blameable() );
-
-
         $this->hasManyToMany(
             'id',
             TermRelationships::class,
