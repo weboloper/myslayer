@@ -31,6 +31,7 @@ class PostsController extends Controller
     public function index()
     { 
 
+      die(var_dump($_SESSION));
       
       $this->saveAction();
 

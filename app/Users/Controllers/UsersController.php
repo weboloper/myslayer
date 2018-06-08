@@ -153,11 +153,11 @@ class UsersController extends Controller
     public function showLoginForm()
     {      
 
-        if(auth()->check())
-        {   
-            // auth()->destroy();
-            return redirect()->to(url()->to('/'));
-        }
+        // if(auth()->check())
+        // {   
+        //     // auth()->destroy();
+        //     return redirect()->to(url()->to('/'));
+        // }
         return view('auth.showLoginForm');
     }
 
@@ -168,11 +168,11 @@ class UsersController extends Controller
      */
     public function attemptToLogin()
     {   
-        if(auth()->check())
-        {   
-            auth()->destroy();
-            return redirect()->to(url()->to('/'));
-        }
+        // if(auth()->check())
+        // {   
+        //     auth()->destroy();
+        //     return redirect()->to(url()->to('/'));
+        // }
 
         $inputs = request()->get();
 
@@ -499,6 +499,18 @@ class UsersController extends Controller
             $this->flashSession->error('Invalid Google response. Please try again');
             return $this->response->redirect();
         }
+    }
+
+    /**
+     * @return array|\Phalcon\Http\Response|\Phalcon\Http\ResponseInterface
+     */
+    public function checkauth()
+    {   
+
+        // $this->middleware('auth');
+        $this->view->disable();
+        // $this->getDI()->get('session')->set('something', "yes");
+        print var_dump( session());
     }
 
 }

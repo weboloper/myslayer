@@ -248,7 +248,8 @@ return [
 
         Clarity\Providers\Aliaser::class,
         Components\Providers\Application::class,
-        Components\Providers\Auth::class,
+        Clarity\Providers\Auth::class,
+        // Components\Providers\Auth::class,
         Components\Providers\Acl::class,
         Clarity\Providers\Cache::class,
         Clarity\Providers\CollectionManager::class,
