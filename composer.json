@@ -16,7 +16,8 @@
         "phalconslayer/framework": "1.4.*",
         "phalcon/incubator": "^3.4",
         "league/oauth2-client": "^0.10",
-        "league/fractal": "^0.9"
+        "league/fractal": "^0.9",
+        "phalconslayer/acme": "*"
     },
     "require-dev": {
         "behat/mink": "^1.7",

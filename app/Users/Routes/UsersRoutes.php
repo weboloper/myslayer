@@ -56,9 +56,5 @@ class UsersRoutes extends RouteGroup
         ])
         ->setName('loginFacebook');
 
-        $this->addGet('/checkauth',   [
-            'action'     => 'checkauth'
-        ]);
-
     }
 }

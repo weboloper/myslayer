@@ -29,7 +29,7 @@ class Auth extends BaseAuth
 
     public function __construct()
     {   
-        // parent::__construct();
+        parent::__construct();
         $this->userService = new User;
     }
 
