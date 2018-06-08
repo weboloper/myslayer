@@ -45,9 +45,6 @@ class UsersRoutes extends RouteGroup
             'action' => 'showResetPasswordForm',
         ])->setName('showResetPasswordForm');
 
-        $this->add('/change-password', [
-            'action' => 'showChangePasswordForm',
-        ])->setName('showChangePasswordForm');
 
         // facebook
         $this->add('/facebook/access_token', [

@@ -8,7 +8,6 @@ use Components\Validation\LoginValidator;
 use Components\Validation\RegistrationValidator;
 use Components\Validation\ForgetpassValidator;
 use Components\Validation\ResetpassValidator;
-use Components\Validation\ChangepassValidator;
 use Phalcon\Mvc\Model\Transaction\Failed as TransactionFailed;
 use Components\Library\Facebook\Auth as FacebookAuth;
 
@@ -28,14 +27,13 @@ class UsersController extends Controller
                 'attemptToLogin',
             ],
         ]);
-        $this->middleware('auth', [
-            'only' => [
-                'showChangePasswordForm',
-            ],
-        ]);
 
+<<<<<<< HEAD
         $this->userService = new \Components\Model\Services\Service\User;
         $this->failedLoginService = new \Components\Model\Services\Service\FailedLogin;
+=======
+         $this->userService = new \Components\Model\Services\Service\User;
+>>>>>>> parent of 2dc5e7f... change password
     }
 
     
@@ -421,50 +419,6 @@ class UsersController extends Controller
         return view('auth.showResetPasswordForm');
     }
 
-     /**
-     * GET | This shows the form to register.
-     *
-     * @return mixed
-     */
-    public function showChangePasswordForm()
-    {  
-        if(request()->isPost()) {
-            
-            $inputs = request()->get();
-
-            $validator = new ChangepassValidator;
-            $validation = $validator->validate($inputs);
-
-            if (count($validation)) {
-                session()->set('input', $inputs);
-
-                return redirect()->to(url()->previous())
-                    ->withError(ChangepassValidator::toHtml($validation));
-            }
-
-            try {
-
-                $user = $this->userService->findFirstById( auth()->getUserId()); 
-                
-                if(!di()->get('security')->checkHash($inputs['oldpassword'] , $user->getPassword())){
-                    return redirect()->to(url()->previous())
-                        ->withError(lang()->get('responses/changepass.wrong_pass'));
-                } else {
-                    $this->userService->assignNewPassword($user, $inputs['password']);
-                    
-                    return redirect()->to(url()->previous())
-                        ->withSuccess(lang()->get('responses/changepass.change_success'));
-                }
- 
-                 
-            } catch (EntityException $e) {
-                 return redirect()->to(url()->previous())
-                ->withError(lang()->get('responses/changepass.unknown_error'));
-            }  
-
-        }
-        return view('auth.showChangePasswordForm');
-    }
     
     /**
      * @return array|\Phalcon\Http\Response|\Phalcon\Http\ResponseInterface
